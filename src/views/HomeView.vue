@@ -44,7 +44,7 @@ DataTable.use(DataTablesCore)
                 @handle-transfer="addCardToToday"
                 @handle-closeCard="closeCard"
               >
-                <CardOfDay v-if="visible[object.id]"></CardOfDay>
+                <CardOfDay v-show="object.visible"></CardOfDay>
               </transition>
             </div>
           </div>
@@ -59,7 +59,7 @@ DataTable.use(DataTablesCore)
                 :key="object"
                 @handle-closeCard="closeCard"
               >
-                <CardOfDay v-if="visible[object.id]"></CardOfDay>
+                <CardOfDay v-show="object.visible"></CardOfDay>
               </transition>
             </div>
           </div>
@@ -106,7 +106,6 @@ export default {
   // },
   data() {
     return {
-      visible: {},
       card_empty: {
         prevoius_day: false,
         today: false
@@ -119,7 +118,8 @@ export default {
           challenge: '',
           is_previous: true,
           btn_transfer:true,
-          is_old: true
+          is_old: true,
+          visible: true
         }
       ],
       task_today: [
@@ -129,17 +129,15 @@ export default {
           description: 'testing',
           challenge: '',
           is_previous: false,
-          is_old: false
+          is_old: false,
+          visible: true
         }
       ],
       
     }
   },
   mounted() {
-    const merge_obj = this.task_today.concat(this.task_previous_day)
-    merge_obj.forEach((task_obj) => {
-      this.visible[task_obj.id] = true
-    })
+
   },
   methods: {
     removeTask(id){
@@ -158,11 +156,9 @@ export default {
       // check in prevoius day
       index = this.task_previous_day.findIndex((x) => x.id === id)
       if(index != -1 && in_today){
-        console.log(in_today);
         this.task_previous_day.forEach(taskObj => {
           if(taskObj.id == id){
             taskObj.btn_transfer = true;
-            console.log(taskObj);
           }
         });
       }else if(index != -1 && !in_today){
@@ -176,14 +172,17 @@ export default {
       this.$refs.popupModal.showModal()
     },
     addCardToToday(cardObject) {
-        cardObject.btn_transfer = false;
-        let transferCard = Object.assign({}, cardObject) ;
-        transferCard.is_previous = true
-        transferCard.is_old = false
-        this.task_today.push(transferCard)
-        this.checkCaredEmpty()
+      cardObject.btn_transfer = false;
+      let transferCard = Object.assign({}, cardObject) ;
+      transferCard.visible = true;
+      transferCard.is_previous = true
+      transferCard.is_old = false
+      console.log(transferCard);
+      this.task_today.push(transferCard);
+      this.checkCaredEmpty()
     },
     closeCard(cardObject) {
+      cardObject.visible = false
       setTimeout(() => {
         this.removeTask(cardObject.id);
         this.checkCaredEmpty()
@@ -194,18 +193,12 @@ export default {
       this.card_empty.prevoius_day = !this.task_previous_day.length ? true : false
     },
     newTask(newTaskObject) {
-      this.visible[newTaskObject.id] = false
-      setTimeout(() => {
-
-        if(newTaskObject.is_previous){ //// insert to previous day
-          this.task_previous_day.push(newTaskObject)
-        }else{ //// is today
-          this.task_today.push(newTaskObject)
-        }
-
-        this.checkCaredEmpty()
-        this.visible[newTaskObject.id] = true
-      }, 500)
+      if(newTaskObject.is_previous){ //// insert to previous day
+        this.task_previous_day.push(newTaskObject)
+      }else{ //// is today
+        this.task_today.push(newTaskObject)
+      }
+      newTaskObject.visible = true;
     },
     saveForToday() {}
   }

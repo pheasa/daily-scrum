@@ -128,7 +128,8 @@ export default {
               description: this.description,
               challenge: this.challenge,
               is_previous: this.is_previous,
-              is_old:false
+              is_old:false,
+              visible:false
             })
       this.myModal.hide()
       this.reset();

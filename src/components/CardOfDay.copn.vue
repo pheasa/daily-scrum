@@ -1,10 +1,11 @@
 <template>
-    <div class="card w-100 mb-3">
+    <div class="card w-100 mb-3"  :style="[!cardObject.btn_transfer && cardObject.is_previous && cardObject.is_old ? 'background-color: #d4babd' : '']">
       <div class="card-body">
         <div class="row" v-if="cardObject.is_previous && cardObject.is_old">
           <div class="col-md-10">
             <h5 class="card-title">{{ cardObject.title }}</h5>
             <p class="card-text">{{ cardObject.description }}</p>
+            <p class="card-text">{{ cardObject.challenge }}</p>
           </div>
           <div class="col-md-2" v-if="cardObject.btn_transfer">
             <button type="button" class="btn btn-primary float-end" @click="moveCard">
@@ -21,7 +22,8 @@
             <button class="close-card" @click="closeCard"><i class="bi bi-x-circle-fill"></i></button>
             </div>
             <div class="col-md-12">
-            <p class="card-text">{{ cardObject.description }}</p>
+              <p class="card-text">{{ cardObject.description }}</p>
+              <p class="card-text">{{ cardObject.challenge }}</p>
             </div>
         </div>
       </div>

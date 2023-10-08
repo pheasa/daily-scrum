@@ -1,0 +1,7 @@
+version: '3'
+services:
+  vuejs-app:
+    image: vuejs-cookbook/dockerize-vuejs-app
+    ports:
+      - "8081:80"
+    restart: always

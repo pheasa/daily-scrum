@@ -48,7 +48,7 @@
             ></textarea>
             <label for="description">Challenge.</label>
           </div>
-          <label for="task-for-day">For</label>
+          <label for="task-for-day">For</label>create login
           <select class="form-select" aria-label="Default select example" id="task-for-day" v-model="is_previous">
             <option :value=false selected>Today</option>
             <option :value=true >Prevoius day</option>
@@ -82,13 +82,20 @@ const initialData = () => ({
     });
 
 export default {
+  props:['transfterCard'],
   data() {
     return initialData();
   },
   mounted() {
     this.myModal = this.initModal();
+    
   },
   methods: {
+    applyData(){
+      if(true){
+
+      };
+    },
     initModal(){
       return new bootstrap.Modal(document.getElementById('createTaskModal'), {});
     },

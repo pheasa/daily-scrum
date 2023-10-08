@@ -69,9 +69,12 @@ DataTable.use(DataTablesCore)
             <div class="col-md-11 text-center">
               <h2>Daily record</h2>
             </div>
-            <div class="col-md-1">
-              <button type="button" class="btn btn-success" @click="saveForToday">
-                send <i class="bi bi-chevron-double-down"></i>
+            <div class="col-md-1" style="display: inline;">
+              <button type="button" class="btn btn-success m-1" @click="saveForPreviousday">
+                Send PD  <i class="bi bi-chevron-double-down"></i>
+              </button>
+              <button type="button" class="btn btn-success m-1" @click="saveForToday">
+                send TD <i class="bi bi-chevron-double-down"></i>
               </button>
             </div>
           </div>
@@ -97,7 +100,7 @@ DataTable.use(DataTablesCore)
       </div>
     </div>
   </main>
-  <CreateTask @handle-new-task="newTask" ref="popupModal"></CreateTask>
+  <CreateTask @handle-new-task="newTask" ref="popupModal" :transferObject="transfterCard" ></CreateTask>
 </template>
 <script>
 export default {
@@ -106,6 +109,7 @@ export default {
   // },
   data() {
     return {
+      transfterCard : null,
       card_empty: {
         prevoius_day: false,
         today: false
@@ -120,6 +124,16 @@ export default {
           btn_transfer:true,
           is_old: true,
           visible: true
+        },
+        {
+          id: 2,
+          title: 'Teting',
+          description: 'This is testing',
+          challenge: '',
+          is_previous: true,
+          btn_transfer:true,
+          is_old: true,
+          visible: true
         }
       ],
       task_today: [
@@ -128,7 +142,7 @@ export default {
           title: 'fa and si form',
           description: 'testing',
           challenge: '',
-          is_previous: false,
+          is_previous: true,
           is_old: false,
           visible: true
         }
@@ -172,6 +186,9 @@ export default {
       this.$refs.popupModal.showModal()
     },
     addCardToToday(cardObject) {
+      this.transfterCard = cardObject;
+      this.$refs.popupModal.showModal();
+
       cardObject.btn_transfer = false;
       let transferCard = Object.assign({}, cardObject) ;
       transferCard.visible = true;
@@ -193,6 +210,7 @@ export default {
       this.card_empty.prevoius_day = !this.task_previous_day.length ? true : false
     },
     newTask(newTaskObject) {
+      console.log(newTaskObject);
       if(newTaskObject.is_previous){ //// insert to previous day
         this.task_previous_day.push(newTaskObject)
       }else{ //// is today
@@ -200,7 +218,13 @@ export default {
       }
       newTaskObject.visible = true;
     },
-    saveForToday() {}
+    saveForToday() {
+      alert('send today to backend.')
+    },
+    saveForPreviousday() {
+      alert('send previous day to backend.')
+
+    }
   }
 }
 </script>
